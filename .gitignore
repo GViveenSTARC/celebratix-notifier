@@ -1,0 +1,45 @@
+# ---- secrets ----
+.env
+.env.*
+*.pem
+*.key
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.cache/
+
+# ---- virtualenvs ----
+.venv/
+venv/
+ENV/
+env/
+.conda/
+
+# ---- ide/editor ----
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ---- logs & runtime state ----
+*.log
+last_available.txt
+
+# ---- playwright ----
+playwright-report/
+test-results/
