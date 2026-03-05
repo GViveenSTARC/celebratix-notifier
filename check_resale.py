@@ -2,12 +2,15 @@ import os
 import re
 import smtplib
 from email.message import EmailMessage
+from email.utils import make_msgid
 from typing import List, Tuple
 
 from playwright.sync_api import sync_playwright
 
 from dotenv import load_dotenv
-load_dotenv("/mnt/linuxstore/scripting/celebratix-notifier/.env")
+load_dotenv()
+
+import random, time
 
 URL = os.environ.get("CELEBRATIX_URL", "https://shop.celebratix.io/?c=whez5")
 
@@ -17,12 +20,18 @@ SMTP_USER = os.environ["SMTP_USER"]
 SMTP_PASS = os.environ["SMTP_PASS"]
 MAIL_TO   = os.environ["MAIL_TO"]
 MAIL_FROM = os.environ.get("MAIL_FROM", SMTP_USER)
+ALERT_KEY = os.environ.get("ALERT_KEY", "celebratix-whez5")
 
 def send_email(subject: str, body: str) -> None:
     msg = EmailMessage()
     msg["Subject"] = subject
     msg["From"] = MAIL_FROM
     msg["To"] = MAIL_TO
+
+    # Stable thread headers for Gmail-ish clients
+    msg["Message-ID"] = f"<{ALERT_KEY}@celebratix.local>"
+    msg["X-Alert-Key"] = ALERT_KEY
+
     msg.set_content(body)
 
     with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=30) as s:
@@ -77,10 +86,12 @@ def check_resale() -> Tuple[bool, str]:
     return available, details
 
 def main() -> None:
+    time.sleep(random.uniform(0, 20))
+
     available, details = check_resale()
     if available:
         send_email(
-            subject="Celebratix resale tickets available!",
+            subject=f"[{ALERT_KEY}] Celebratix resale tickets available!",
             body=f"Resale tickets seem to be available.\n\nURL: {URL}\n\nCounts:\n{details}\n\nFly you fool."
         )
         print("EMAIL SENT\n", details)
