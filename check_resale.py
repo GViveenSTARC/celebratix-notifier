@@ -7,10 +7,10 @@ from typing import List, Tuple
 
 from playwright.sync_api import sync_playwright
 
+import random, time
+
 from dotenv import load_dotenv
 load_dotenv()
-
-import random, time
 
 URL = os.environ.get("CELEBRATIX_URL", "https://shop.celebratix.io/?c=whez5")
 
